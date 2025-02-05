@@ -1,8 +1,40 @@
+const extractedLinks = [];
+let extractedPDFs = [];
+
 console.log("Content script loaded.");
 
-// Extracts links from elements that contain "Datei"
-function example() {
-    chrome.runtime.sendMessage({ type: "example", data: "hello" });
+
+function extractLinks() {
+  const pageAnchors = document.querySelectorAll("a");
+
+  pageAnchors.forEach((anchor) => {
+    const href = anchor.getAttribute("href");
+    const textElement = anchor.querySelector(".instancename");
+
+    if (href && textElement) {
+      extractedLinks.push({
+        href,
+        text: textElement.textContent,
+      });
+    }
+  });
+
 }
 
-example();
+extractLinks();
+
+chrome.runtime.sendMessage({ action: "selectAnchors", hrefs: extractedLinks }, (response) => {
+  extractedPDFs = response;
+});
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  switch (message.action) {
+      case "getPdfList":
+        sendResponse(extractedPDFs);
+        break;
+      default:
+          console.log("Unknown message type:", message.action);
+  }
+
+  return 
+});
