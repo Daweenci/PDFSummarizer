@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
             const anchor = document.createElement("a");
             anchor.href = pdf.href;
-            anchor.textContent = pdf.text;
+            anchor.textContent = pdf.name;
             anchor.addEventListener("click", function(event) {
                 event.preventDefault();
-                window.open(pdf.href, "_blank");
+                window.open(anchor.href, "_blank");
             });
             
             const label = document.createElement("label");          

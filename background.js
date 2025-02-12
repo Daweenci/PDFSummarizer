@@ -16,30 +16,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 async function extractPdfList(hrefs) {
     const results = await Promise.all(
         hrefs.map(async (link) => {
-            const isPDF = await checkIfPDF(link.href);
-            return { 
-                href: link.href, 
-                text: link.text,
-                isPDF 
-            };
+            return await checkIfPDF(link);
         })
     );
 
     const pdfList = results.filter(result => result.isPDF);
-    
+    console.log("PDFs found:", pdfList);
     return pdfList;
 }
 
-async function checkIfPDF(url) {
+async function checkIfPDF(link) {
     try {
-        const response = await fetch(url, { method: "HEAD" });
+        const response = await fetch(link.href, { method: "HEAD" });
+        const contentDisposition = response.headers.get("Content-Disposition");
+        const fileName = link.name || (contentDisposition ? contentDisposition.match(/filename="?([^"]+)"?/)?.[1] : "No name found");
+
         const contentType = response.headers.get("Content-Type");
 
         if(response.ok) {
             console.log("Response status:", response.status);
         }
 
-        return contentType && contentType.includes("application/pdf");
+        return { href: link.href, name: fileName, isPDF: contentType && contentType.includes("application/pdf") };
     } catch (error) {
         console.error("Error fetching the URL:", error);
     }
