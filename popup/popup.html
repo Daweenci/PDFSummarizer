@@ -8,7 +8,10 @@
 </head>
 <body>
     <h1>My Extension</h1>
-    <input type="text" id="api-key" placeholder="Enter API key">
+    <div id="api-key-container">
+        <p id="missing-key-message">Missing API Key</p>
+        <input type="text" id="api-key" placeholder="Enter API key">
+    </div>
     <div id="buttons-container">
         <button id="create-summary">Create Summary</button>
         <button id="create-tasks">Create Tasks</button>

@@ -1,4 +1,5 @@
 const extractedLinks = [];
+let hasReturnedPDFs = false;
 let extractedPDFs = [];
 
 console.log("Content script loaded.");
@@ -26,13 +27,30 @@ extractLinks();
 
 chrome.runtime.sendMessage({ action: "selectAnchors", hrefs: extractedLinks }, (response) => {
     extractedPDFs = response;
+    hasReturnedPDFs = true;
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.action) {
         case "getPdfList":
-            sendResponse(extractedPDFs);
-            break;
+            if (hasReturnedPDFs) {
+                sendResponse(extractedPDFs);
+            } else {
+                let time = 0; 
+                const interval = setInterval(() => {
+                    time += 500;
+
+                    if (hasReturnedPDFs) {
+                        console.log(extractedPDFs);
+                        sendResponse(extractedPDFs);
+                        clearInterval(interval);
+                    } else if(time >= 20000) {
+                        clearInterval(interval);
+                        sendResponse({extractedPDFs: [], action: "timeout"});
+                    } 
+                }, 500);
+            }
+            return true;
         default:
             console.log("Unknown message type:", message.action);
     }

@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function() {
+    const loadingDiv = document.getElementById("loading");
     const pdfContainer = document.getElementById("pdfContainer");
     // pdfList/pdfList.html?action=task    pdfList/pdfList.html?action=summary
     const action = new URLSearchParams(window.location.search).get("action");
+    const apiKey = new URLSearchParams(window.location.search).get("apiKey");
 
     (async () => {
         try {
@@ -23,7 +25,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 button.addEventListener("click", function() {
                     if(action === "summary") { 
                         
+
                     } else if(action === "task") {
+                        
                         
                     }
                     else {
@@ -67,6 +71,22 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
+    function displayData() {
+        loadingDiv.style.display = "none";
+        pdfContainer.style.display = "grid";
+    }
+
+    function displayError() {
+        loadingDiv.style.display = "none";
+        pdfContainer.style.display = "grid";
+        const errorMessage = document.createElement("p");
+        errorMessage.textContent = "An error occurred while fetching the PDFs.";
+        errorMessage.style.color = "red";  
+        errorMessage.style.textAlign = "center";
+        errorMessage.style.fontSize = "18px";     
+        pdfContainer.appendChild(errorMessage);
+    }
+
     async function getPdfsForCurrentUrl() {
         const tabId = await getCurrentTabId();
         
@@ -77,7 +97,13 @@ document.addEventListener("DOMContentLoaded", function() {
                     return;
                 }
 
-                resolve(response); // Correctly resolve the response
+                if (response.action === "timeout") {
+                    displayError();
+                    resolve([]);
+                } else {
+                    displayData();
+                    resolve(response); // Correctly resolve the response
+                }
             });
         });
     }

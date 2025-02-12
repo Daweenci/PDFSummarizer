@@ -1,16 +1,18 @@
 body {
     display: block;
-    width: 250px;  
-    height: 320px; 
+    width: auto;  
+    height: auto; 
     font-family: Arial, sans-serif;
     text-align: center;
     background-color: #292a2d;
 }
 
 h1{
+    white-space: nowrap;
     font-weight: 500;
     color: white;
-    padding: 10px 30px;
+    padding: 10px 10px;
+    margin: 4px 34px;
 }
 
 #buttons-container{
@@ -41,10 +43,23 @@ button:hover{
     color: white;
 }
 
+#api-key-container > p{
+   
+}	
+#missing-key-message{
+    text-align: left;
+    display: none;
+    color: #ff4d4d;
+    font-size: 14px;
+    margin: 0px 10px;
+    padding: 0px 10px;
+}
+
 #api-key{
     width: 180px;
     height: 20px;
     padding: 10px 10px;
+    margin: 4px 10px;
     font-size: 14px;
     background-color: #404045;
     color: #a0a6b4;
