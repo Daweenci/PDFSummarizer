@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () { //Bedingung muss auf
             return;
         }
         
-        window.location.href = "selectPDFs/pdfAction.html?action=summary?apiKey=" + apiKeyElement.value;
+        window.location.href = "selectPDFs/pdfAction.html?action=summary&apiKey=" + apiKeyElement.value;
     });
 
     document.getElementById("create-tasks").addEventListener("click", function () {
@@ -19,6 +19,6 @@ document.addEventListener("DOMContentLoaded", function () { //Bedingung muss auf
             return;
         }
 
-        window.location.href = "selectPDFs/pdfAction.html?action=task?apiKey=" + apiKeyElement.value;
+        window.location.href = "selectPDFs/pdfAction.html?action=task&apiKey=" + apiKeyElement.value;
     });
 });

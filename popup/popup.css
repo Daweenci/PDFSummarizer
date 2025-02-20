@@ -43,9 +43,6 @@ button:hover{
     color: white;
 }
 
-#api-key-container > p{
-   
-}	
 #missing-key-message{
     text-align: left;
     display: none;

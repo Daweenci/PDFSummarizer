@@ -24,8 +24,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 button.id = "confirmButton";
                 button.addEventListener("click", function() {
                     if(action === "summary") { 
-                        
-
+                        const checkboxes = pdfContainer.querySelectorAll("input[type='checkbox']:checked");
+                        var pdfs = [];
+                        checkboxes.forEach(checkbox => {
+                            const label = checkbox.nextElementSibling;
+                            const anchor = label.querySelector("a");
+                            pdfs.push(anchor.href);
+                        });
+                        sendRequestToBackground(pdfs);
                     } else if(action === "task") {
                         
                         
@@ -42,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     })();
 
-    function pdfListToHTML(pdfList, pdfContainer) {
+    function pdfListToHTML(pdfList) {
         let index = 0;
         for(pdf of pdfList) {
             const checkbox = document.createElement("input");
@@ -123,6 +129,18 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 resolve(tabs[0].id);
             });
+        });
+    }
+
+    function sendRequestToBackground(pdfList) {
+        chrome.runtime.sendMessage({ action: "sendSummaryRequest", pdfList }, function(response) {
+            if (chrome.runtime.lastError) {
+                console.error("Error sending request to background:", chrome.runtime.lastError.message);
+            }
+
+            if (response) {
+                console.log("Response from background:", response);
+            }
         });
     }
 });
