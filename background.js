@@ -20,23 +20,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
 async function sendPdfsToApi(pdfList) {
     try {
-        const pdfPromises = pdfList.map(async (pdf) => {
-            const response = await fetch(pdf);
+        const formData = new FormData();
+
+        // Fetch each PDF, convert to Blob, and append to FormData
+        for (let i = 0; i < 2; i++) {
+            const response = await fetch(pdfList[i]);
             const blob = await response.blob();
-            const arrayBuffer = await blob.arrayBuffer();
-            return Array.from(new Uint8Array(arrayBuffer));
-        });
+            formData.append("files", blob, `pdf_${i}.pdf`);
+        }
 
-        const pdfByteArrays = await Promise.all(pdfPromises);
-        
-        const firstTwoPdfs = pdfByteArrays.slice(0, 2);
-
-        const apiResponse = await fetch("http://localhost:5177/summary", {
+        const apiResponse = await fetch("https://localhost:7133/summary", {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ Pdfs: "Test" })
+            body: formData // Sending binary files
         });
 
         const result = await apiResponse.json();
@@ -44,7 +39,7 @@ async function sendPdfsToApi(pdfList) {
     } catch (error) {
         console.error("Error sending PDFs to API:", error);
     }
-} 
+}
 
 async function extractPdfList(hrefs) {
     const results = await Promise.all(
