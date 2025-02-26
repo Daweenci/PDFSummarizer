@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function sendRequestToBackground(pdfList) {
-        chrome.runtime.sendMessage({ action: "sendSummaryRequest", pdfList }, function(response) {
+        chrome.runtime.sendMessage({ action: "sendSummaryRequest", pdfList, apiKey }, function(response) {
             if (chrome.runtime.lastError) {
                 console.error("Error sending request to background:", chrome.runtime.lastError.message);
             }

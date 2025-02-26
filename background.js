@@ -7,8 +7,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             });
             return true;
         case "sendSummaryRequest": 
-            sendPdfsToApi(message.pdfList).then(() => {
+            sendPdfsToApi(message.pdfList, message.apiKey).then(() => {
                 sendResponse("PDFs sent to API");
+            });
+            return true;
+        case "storeApiKey":
+            chrome.storage.local.set({ "apiKey": message.apiKey }, () => {
+                sendResponse({ ok: true });
+            })
+            return true;
+        case "getApiKey":
+            chrome.storage.local.get("apiKey", (data) => {
+                sendResponse({ apiKey: data.apiKey });
+                console.log("API key sent:", data.apiKey);
             });
             return true;
         default:
@@ -18,20 +29,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return 
 });
 
-async function sendPdfsToApi(pdfList) {
+async function sendPdfsToApi(pdfList, apiKey) {
     try {
-        const formData = new FormData();
+        const Pdfs = new FormData();
 
         // Fetch each PDF, convert to Blob, and append to FormData
         for (let i = 0; i < 2; i++) {
             const response = await fetch(pdfList[i]);
             const blob = await response.blob();
-            formData.append("files", blob, `pdf_${i}.pdf`);
+            Pdfs.append("files", blob, `pdf_${i}.pdf`);
         }
 
         const apiResponse = await fetch("https://localhost:7133/summary", {
             method: "POST",
-            body: formData // Sending binary files
+            headers: {
+                "apiKey": apiKey
+            },
+            body: Pdfs // Sending binary files
         });
 
         const result = await apiResponse.json();
