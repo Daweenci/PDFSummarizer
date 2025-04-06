@@ -1,54 +1,31 @@
+
 body{
+    margin: 8px;
     width:400px;
-    height: 580px;
+    height: 582px;
     background-color: #292a2d;
 }
 
 h1{
-    margin:10px;
+    margin:10px 0 0 0;
     font-size: 40px;
     text-align: center;
     font-weight: 400;
     color: white;
 }
 
-#loading {
-    display: flex; 
-    flex-direction: column;
-    align-items: center;
-}
-
-.spinner {
-    width: 40px; 
-    height: 40px;
-    border: 4px solid #404045;
-    border-left-color: #007bff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 10px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-} 
-
-.loading-text{
-    color: white;
-    font-size: 20px;
-}
-
 #pdfContainer{
     border: #404045 4px solid;
     background-color: #292a2d;
-    display: none;
+    display: grid;
     grid-template-columns: auto;
     row-gap: 20px;
     flex-grow: 1;
-    max-height: calc(100% - 30px - 130px);
+    max-height: calc(100% - 70px - 130px);
     overflow-y: auto;
     padding: 10px;
     border-radius: 5px;
+
 }
 
 #pdfContainer::-webkit-scrollbar {
@@ -103,4 +80,45 @@ button:hover{
 
 #backButton{
     float: left;
+}
+
+#toggleContainer{
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    margin-bottom: 10px;
+}
+#toggleLabel{
+    width: 80px;
+    height: 38px;
+    background-color: #404045;
+    position: relative;
+    border-radius: 100px;
+    display: block;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+#toggleLabel:after{
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 34px;
+    height: 34px;
+    background-color: #292a2d;
+    border-radius: 100px;
+    transition: all .3s ease-in-out;
+}
+#toggle{
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+#toggle:checked + #toggleLabel{
+    background-color: #4d6bfe;
+}
+#toggle:checked + #toggleLabel:after{
+    left: calc(100% - 2px);
+    transform: translateX(-100%);
+    background-color: #c9d2fd;
 }

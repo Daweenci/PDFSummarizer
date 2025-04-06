@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function() {
     const loadingDiv = document.getElementById("loading");
     const pdfContainer = document.getElementById("pdfContainer");
+    const toggle = document.getElementById("toggle");
     // pdfList/pdfList.html?action=task    pdfList/pdfList.html?action=summary
     const action = new URLSearchParams(window.location.search).get("action");
     const apiKey = new URLSearchParams(window.location.search).get("apiKey");
@@ -9,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         try {
             const pdfList = await getPdfsForCurrentUrl();
             pdfListToHTML(pdfList, pdfContainer);
+            toggle.addEventListener("click", toggleAllCheckboxes);
             
             const button = document.createElement("button");
             button.textContent = "Back";
@@ -74,6 +76,22 @@ document.addEventListener("DOMContentLoaded", function() {
             divContainer.appendChild(label);
 
             pdfContainer.appendChild(divContainer);
+        }
+    }
+
+    function toggleAllCheckboxes() {
+        console.log("Toggle all checkboxes clicked");
+        const checkboxes = pdfContainer.querySelectorAll("input[type='checkbox']");
+        const checked = toggle.checked;
+        if(checked) {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+        }
+        else {
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
         }
     }
 
